@@ -1,12 +1,18 @@
-// App.js
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useParams,
+  useNavigate
+} from 'react-router-dom';
 import ConfirmationPage from './ConfirmationPage';
 import MenuItemDetail from './MenuItemDetail';
 import AdminPage from './AdminPage';
-import menuItems from './menuitems';
+import menuItems from './menus/menuitems';
 import './App.css';
 
+// --- Lokaliseeritud tekstid ---
 const languages = {
   en: {
     header: 'KODUKOHVIK',
@@ -44,8 +50,11 @@ const categoryLabels = {
   drink: { et: 'Joogid', en: 'Drinks', ru: 'Напитки' },
 };
 
-const HomePage = ({ cart, setCart, language, setLanguage, theme, toggleTheme, placeOrder }) => {
+// --- Kodulehe komponent ---
+const HomePage = ({ language, setLanguage, theme, toggleTheme }) => {
   const navigate = useNavigate();
+  const { cafeId } = useParams();
+  const [cart, setCart] = useState([]);
 
   const addToCart = (item) => {
     setCart((prev) => [...prev, item]);
@@ -59,25 +68,35 @@ const HomePage = ({ cart, setCart, language, setLanguage, theme, toggleTheme, pl
 
   const calculateTotal = () => cart.reduce((sum, item) => sum + item.price, 0);
 
+  const placeOrder = () => {
+    const orderId = generateOrderId();
+    const totalAmount = calculateTotal();
+    const ordersKey = `orders-${cafeId}`;
+    const orders = JSON.parse(localStorage.getItem(ordersKey) || '[]');
+    orders.push({ orderId, cart, totalAmount, language, time: new Date().toISOString() });
+    localStorage.setItem(ordersKey, JSON.stringify(orders));
+    setCart([]);
+    navigate(`/${cafeId}/confirmation`, {
+      state: { cart, totalAmount, orderId, language }
+    });
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <h1>{languages[language].header}</h1>
-
+        <h1>{languages[language].header} ({cafeId})</h1>
         <div className="language-switcher">
           <button onClick={() => setLanguage('et')}>ET</button>
           <button onClick={() => setLanguage('en')}>EN</button>
           <button onClick={() => setLanguage('ru')}>RU</button>
         </div>
-
         <div className="theme-toggle">
           <button onClick={toggleTheme}>
             {theme === 'dark' ? '🌙 Dark' : '🌞 Light'}
           </button>
         </div>
-
         <div className="admin-link">
-          <button onClick={() => navigate('/admin')}>Admin</button>
+          <button onClick={() => navigate(`/${cafeId}/admin`)}>Admin</button>
         </div>
       </header>
 
@@ -92,7 +111,7 @@ const HomePage = ({ cart, setCart, language, setLanguage, theme, toggleTheme, pl
                 .map((item) => (
                   <li key={item.id}>
                     <div
-                      onClick={() => navigate('/detail', { state: { item, language } })}
+                      onClick={() => navigate(`/${cafeId}/detail`, { state: { item, language } })}
                       style={{ cursor: 'pointer' }}
                     >
                       <strong>{item.name[language]}</strong> - ${item.price}<br />
@@ -127,10 +146,7 @@ const HomePage = ({ cart, setCart, language, setLanguage, theme, toggleTheme, pl
 
         <h3>{languages[language].total}: ${calculateTotal()}</h3>
         <div className="order-button">
-          <button
-            onClick={() => placeOrder(cart, language, setCart, navigate)}
-            disabled={cart.length === 0}
-          >
+          <button onClick={placeOrder} disabled={cart.length === 0}>
             {languages[language].placeOrder}
           </button>
         </div>
@@ -139,6 +155,7 @@ const HomePage = ({ cart, setCart, language, setLanguage, theme, toggleTheme, pl
   );
 };
 
+// --- Abi: unikaalne tellimuse ID ---
 const generateOrderId = () => {
   const now = new Date();
   const datePart = now.toISOString().slice(0, 10).replace(/-/g, '');
@@ -149,28 +166,8 @@ const generateOrderId = () => {
   return `ORDER-${datePart}-${String(nextNumber).padStart(4, '0')}`;
 };
 
-const placeOrder = (cart, language, setCart, navigate) => {
-  const orderId = generateOrderId();
-  const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
-
-  const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-  orders.push({ orderId, cart, totalAmount, language, time: new Date().toISOString() });
-  localStorage.setItem('orders', JSON.stringify(orders));
-
-  setCart([]);
-
-  navigate('/confirmation', {
-    state: {
-      cart,
-      totalAmount,
-      orderId,
-      language,
-    },
-  });
-};
-
+// --- App komponendi sisu ---
 const App = () => {
-  const [cart, setCart] = useState([]);
   const [language, setLanguage] = useState('et');
   const [theme, setTheme] = useState('light');
 
@@ -184,25 +181,19 @@ const App = () => {
     <Router>
       <Routes>
         <Route
-          path="/"
+          path="/:cafeId"
           element={
             <HomePage
-              cart={cart}
-              setCart={setCart}
               language={language}
               setLanguage={setLanguage}
               theme={theme}
               toggleTheme={toggleTheme}
-              placeOrder={placeOrder}
             />
           }
         />
-        <Route
-          path="/detail"
-          element={<MenuItemDetail language={language} onAddCustomizedItem={(item) => setCart([...cart, item])} />}
-        />
-        <Route path="/confirmation" element={<ConfirmationPage />} />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/:cafeId/detail" element={<MenuItemDetail />} />
+        <Route path="/:cafeId/confirmation" element={<ConfirmationPage />} />
+        <Route path="/:cafeId/admin" element={<AdminPage />} />
       </Routes>
     </Router>
   );

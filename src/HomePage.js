@@ -1,7 +1,7 @@
 // HomePage.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import menuItems from './menuitems';
+import menuItems from './menus/menuitems';
 
 const categoryLabels = {
   starter: { et: 'Eelroad', en: 'Starters', ru: 'Закуски' },
