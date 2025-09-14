@@ -1,7 +1,7 @@
 // HomePage.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import menuItems from './menus/menuitems';
+
 
 const categoryLabels = {
   starter: { et: 'Eelroad', en: 'Starters', ru: 'Закуски' },
@@ -22,6 +22,15 @@ const HomePage = ({ cart, setCart, language, setLanguage, placeOrder }) => {
     updatedCart.splice(index, 1);
     setCart(updatedCart);
   };
+
+  useEffect(() => {
+  const fetchData = async () => {
+    const querySnapshot = await getDocs(collection(db, "menu"));
+    const items = querySnapshot.docs.map(doc => doc.data());
+    setMenuItems(items);
+  };
+  fetchData();
+}, []);
 
   const calculateTotal = () => cart.reduce((sum, item) => sum + item.price, 0);
 

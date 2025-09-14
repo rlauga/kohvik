@@ -1,7 +1,7 @@
 // src/uploadMenuToFirebase.js
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from './firebase-kohvik-rlauga'; // ← muuda kohviku järgi
-import menuItems from './menuitems'; // ← sinu kohviku menu
+import menuItems from './menus/menuitems'; // ← sinu kohviku menu
 
 const uploadMenu = async () => {
   try {
