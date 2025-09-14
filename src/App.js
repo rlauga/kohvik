@@ -9,6 +9,7 @@ import {
 import ConfirmationPage from './ConfirmationPage';
 import MenuItemDetail from './MenuItemDetail';
 import AdminPage from './AdminPage';
+import menuItems from './menuitems';
 import './App.css';
 
 // --- Lokaliseeritud tekstid ---
@@ -105,14 +106,20 @@ const HomePage = ({ language, setLanguage, theme, toggleTheme }) => {
           <div key={category}>
             <h3>{categoryLabels[category][language]}</h3>
             <ul>
-              {menu[cafeId][category].map((item) => (
-                <li key={item.name[language]}>
-                  {item.name[language]} - ${item.price}
-                  <button onClick={() => addToCart(item)}>
-                    {languages[language].addToCart}
-                  </button>
-                </li>
-              ))}
+              {menuItems
+                .filter((item) => item.category === category)
+                .map((item) => (
+                  <li key={item.id}>
+                    <div
+                      onClick={() => navigate(`/${cafeId}/detail`, { state: { item, language } })}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <strong>{item.name[language]}</strong> - ${item.price}<br />
+                      <small>{item.description[language]}</small>
+                    </div>
+                    <button onClick={() => addToCart(item)}>{languages[language].addToCart}</button>
+                  </li>
+                ))}
             </ul>
           </div>
         ))}
@@ -173,17 +180,17 @@ const App = () => {
   return (
     <Router>
       <Routes>
-       <Route
-  path="/:cafeId"
-  element={
-    <HomePage
-      language={language}
-      setLanguage={setLanguage}
-      theme={theme}
-      toggleTheme={toggleTheme}
-    />
-  }
-/>
+        <Route
+          path="/:cafeId"
+          element={
+            <HomePage
+              language={language}
+              setLanguage={setLanguage}
+              theme={theme}
+              toggleTheme={toggleTheme}
+            />
+          }
+        />
         <Route path="/:cafeId/detail" element={<MenuItemDetail />} />
         <Route path="/:cafeId/confirmation" element={<ConfirmationPage />} />
         <Route path="/:cafeId/admin" element={<AdminPage />} />
