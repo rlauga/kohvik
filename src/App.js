@@ -9,7 +9,6 @@ import {
 import ConfirmationPage from './ConfirmationPage';
 import MenuItemDetail from './MenuItemDetail';
 import AdminPage from './AdminPage';
-import menuItems from './menus/menuitems';
 import './App.css';
 
 // --- Lokaliseeritud tekstid ---
@@ -180,17 +179,17 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route
-          path="/:cafeId"
-          element={
-            <HomePage
-              language={language}
-              setLanguage={setLanguage}
-              theme={theme}
-              toggleTheme={toggleTheme}
-            />
-          }
-        />
+       <Route
+  path="/:cafeId"
+  element={
+    <HomePage
+      language={language}
+      setLanguage={setLanguage}
+      theme={theme}
+      toggleTheme={toggleTheme}
+    />
+  }
+/>
         <Route path="/:cafeId/detail" element={<MenuItemDetail />} />
         <Route path="/:cafeId/confirmation" element={<ConfirmationPage />} />
         <Route path="/:cafeId/admin" element={<AdminPage />} />
