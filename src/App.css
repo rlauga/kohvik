@@ -1,38 +1,391 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+/* Üldised stiilid */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #f0f2f7;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.App-logo {
-  height: 40vmin;
+.App {
+  text-align: center;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* Sticky Header */
+.App-header {
+  background-color: #101820;
+  color: white;
+  padding: 2rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Pealkiri */
+.App-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+/* Keelevalik */
+.language-switcher {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.language-switcher button {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.language-switcher button:hover {
+  background-color: white;
+  color: #101820;
+}
+
+/* Teema lüliti */
+.theme-toggle {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
+
+.theme-toggle button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: none;
+  border: 2px solid white;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .theme-toggle button {
+  border-color: #ccc;
+  color: #ccc;
+}
+
+/* Kategooria pealkirjad */
+main h3 {
+  margin-top: 2rem;
+  border-bottom: 2px solid #ccc;
+  display: inline-block;
+  padding-bottom: 0.4rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Menüükirjed */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background-color: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  margin: 0.75rem 0;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  animation: fadeInUp 0.3s ease both;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+li:hover {
+  transform: scale(1.015);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+li small {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Nupud */
+button {
+  padding: 0.6rem 1.2rem;
+  background-color: #1877f2;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+button:hover {
+  background-color: #105bd8;
+  transform: translateY(-2px);
+}
+
+button:disabled,
+.disabled-button {
+  background-color: #ccc;
+  cursor: not-allowed;
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+/* Aktiivse tellimisnupu pulseeriv animatsioon */
+.place-order-button:not(:disabled) {
+  animation: pulse 1.6s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(24, 119, 242, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(24, 119, 242, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(24, 119, 242, 0);
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Pangavalik */
+.bank-select {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.bank-option {
+  position: relative;
+  background: #fff;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bank-option:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+}
+
+.bank-option input[type="radio"] {
+  display: none;
+}
+
+.bank-option img {
+  height: 32px;
+  width: auto;
+  border-radius: 4px;
+}
+
+.selected-bank {
+  border: 2px solid #1877f2 !important;
+  box-shadow: 0 0 10px rgba(24, 119, 242, 0.4);
+  background-color: #eaf1ff;
+}
+
+.checkmark {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 1.2rem;
+  pointer-events: none;
+  display: none;
+}
+
+.selected-bank .checkmark {
+  display: inline;
+  color: #1877f2;
+}
+
+/* Pime režiim */
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+body.dark-mode .App-header {
+  background-color: #1a1a1a;
+}
+
+body.dark-mode li {
+  background-color: #1f1f1f;
+  color: #f0f0f0;
+}
+
+body.dark-mode .bank-option {
+  background-color: #1e1e1e;
+  color: #ddd;
+}
+
+body.dark-mode .selected-bank {
+  border-color: #66b2ff !important;
+  box-shadow: 0 0 10px rgba(102, 178, 255, 0.4);
+  background-color: #1a2a3a;
+}
+
+body.dark-mode .checkmark {
+  color: #90cdf4;
+}
+
+/* Tellimuse esitamise animatsioon */
+.order-confirmed {
+  animation: bounceIn 0.6s ease forwards;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Klaviatuuri accessibility */
+button:focus-visible {
+  outline: 2px solid #1877f2;
+  outline-offset: 2px;
+}
+
+/* Mobiilisõbralikud muudatused */
+@media (max-width: 600px) {
+  .App {
+    padding: 0.5rem;
+  }
+
+  li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .language-switcher {
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .theme-toggle {
+    top: 0.5rem;
+    left: 0.5rem;
+  }
+
+  button {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .bank-select {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bank-option {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .App-header h1 {
+    font-size: 1.6rem;
+  }
+}
+
+/* Tellimuse kokkuvõtte ja nupu stiilid */
+.order-summary {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 2rem;
 }
 
-.App-link {
-  color: #61dafb;
+.order-total h3 {
+  margin: 0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.order-button button {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.ingredients-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 1rem auto;
+  max-width: 400px;
+}
+
+.ingredient-option {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.order-box {
+  background: #f5f5f5;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
