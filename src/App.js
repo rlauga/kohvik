@@ -10,6 +10,7 @@ import ConfirmationPage from './ConfirmationPage';
 import MenuItemDetail from './MenuItemDetail';
 import AdminPage from './AdminPage';
 import menuItems from './menuitems';
+import HomePage from './HomePage';
 import './App.css';
 
 // --- Lokaliseeritud tekstid ---
